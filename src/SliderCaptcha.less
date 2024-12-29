@@ -1,0 +1,82 @@
+.slider_captcha {
+    --bg-width: 320px;
+    --bg-height: 160px;
+    --puzzle-width: 60px;
+    --handler-size: 40px;
+
+    position: relative;
+
+    .bg {
+        width: var(--bg-width);
+    }
+
+    .puzzle {
+        position: absolute;
+        top: 0;
+        width: var(--puzzle-width);
+    }
+
+    .slider {
+        margin-top: 10px;
+        height: var(--handler-size);
+        position: relative;
+        border: 1px solid #e4e6eb;
+    }
+
+    input {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        cursor: grab;
+    }
+
+    .rail {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        pointer-events: none;
+        display: grid;
+        gap: var(--handler-size);
+
+        &::before {
+            content: "";
+            background: #d1e9fe;
+            border: 1px solid #1991fa;
+            pointer-events: auto;
+        }
+
+        &::after {
+            content: "";
+            background: #f7f9fa;
+            pointer-events: auto;
+        }
+    }
+
+    .handler {
+        position: absolute;
+        top: 0;
+        width: var(--handler-size);
+        background: #1991fa;
+        pointer-events: none;
+        text-align: center;
+        border-radius: 0 1px 1px 0;
+        box-shadow: 0 0 3px rgba(0, 0, 0, .3);
+
+        &::before {
+            content: '⮕';
+            font-size: larger;
+            color: white;
+            line-height: var(--handler-size);
+        }
+    }
+
+    .hint {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        line-height: var(--handler-size);
+        text-align: center;
+        pointer-events: none;
+    }
+}

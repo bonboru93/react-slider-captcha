@@ -1,0 +1,71 @@
+.slider_captcha {
+  --bg-width: 320px;
+  --bg-height: 160px;
+  --puzzle-width: 60px;
+  --handler-size: 40px;
+  position: relative;
+}
+.slider_captcha .bg {
+  width: var(--bg-width);
+}
+.slider_captcha .puzzle {
+  position: absolute;
+  top: 0;
+  width: var(--puzzle-width);
+}
+.slider_captcha .slider {
+  margin-top: 10px;
+  height: var(--handler-size);
+  position: relative;
+  border: 1px solid #e4e6eb;
+}
+.slider_captcha input {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  cursor: grab;
+}
+.slider_captcha .rail {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+  display: grid;
+  gap: var(--handler-size);
+}
+.slider_captcha .rail::before {
+  content: "";
+  background: #d1e9fe;
+  border: 1px solid #1991fa;
+  pointer-events: auto;
+}
+.slider_captcha .rail::after {
+  content: "";
+  background: #f7f9fa;
+  pointer-events: auto;
+}
+.slider_captcha .handler {
+  position: absolute;
+  top: 0;
+  width: var(--handler-size);
+  background: #1991fa;
+  pointer-events: none;
+  text-align: center;
+  border-radius: 0 1px 1px 0;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+.slider_captcha .handler::before {
+  content: '⮕';
+  font-size: larger;
+  color: white;
+  line-height: var(--handler-size);
+}
+.slider_captcha .hint {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  line-height: var(--handler-size);
+  text-align: center;
+  pointer-events: none;
+}
