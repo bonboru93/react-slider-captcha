@@ -7,6 +7,7 @@ import arrowRightIcon from "./assets/arrow_right.svg"
 import okIcon from "./assets/ok.svg"
 import errIcon from "./assets/err.svg"
 import loadingIcon from "./assets/loading.svg"
+import reloadIcon from "./assets/reload.svg"
 
 
 const BG_WIDTH = 320
@@ -29,38 +30,37 @@ const colorMap = {
     err: ['#f57a7a', '#fce1e1']
 }
 
-const SliderCaptcha = ({ onCheck }) => {
+const SliderCaptcha = ({ bgImg = defaultBgImg, puzzleImg = defaultPuzzleImg, onCheck }) => {
     const [puzzlePos, setPuzzlePos] = useState(0)
     const handlerPos = puzzlePos * HANDLER_WALK / PUZZLE_WALK
 
     const [status, setStatus] = useState('ready')
 
-    const _onVerify = v => {
+    const _onCheck = v => {
         setStatus('checking')
         onCheck(v)
             .then(() => setStatus('ok'))
             .catch(() => setStatus('err'))
             .finally(() => setTimeout(() => {
                 setPuzzlePos(0)
-                setTimeout(() => {
-                    setStatus('ready')
-                }, 0);
+                setStatus('ready')
             }, 500))
     }
 
     return (
         <div className="slider_captcha">
-            <img src={defaultBgImg} className="bg" />
-            <img src={defaultPuzzleImg} className="puzzle" style={{ left: puzzlePos }} />
+            <img src={bgImg} className="bg" />
+            <img src={puzzleImg} className="puzzle" style={{ left: puzzlePos }} />
+            <img src={reloadIcon} className="reload" />
 
             <div className="slider">
                 <input type="range"
                     value={puzzlePos} max={PUZZLE_WALK} step="0.1"
                     onChange={e => setPuzzlePos(Number(e.target.value))}
-                    onMouseUp={e => _onVerify(Number(e.target.value))}
-                    onTouchEnd={e => _onVerify(Number(e.target.value))}
+                    onMouseUp={e => _onCheck(Number(e.target.value))}
+                    onTouchEnd={e => _onCheck(Number(e.target.value))}
                     onKeyDown={e => e.preventDefault()}
-                    style={{ pointerEvents: status === 'ready' ? 'unset' : 'none' }}
+                    style={{ pointerEvents: status !== 'ready' && 'none' }}
                 />
                 <div className="rail" style={{ gridTemplateColumns: `${handlerPos}px auto` }}>
                     <div style={{
