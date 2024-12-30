@@ -39,10 +39,9 @@
         display: grid;
         gap: var(--handler-size);
 
-        &::before {
-            content: "";
-            background: #d1e9fe;
-            border: 1px solid #1991fa;
+        div {
+            border: 1px solid;
+            border-right: 0;
             pointer-events: auto;
         }
 
@@ -57,17 +56,17 @@
         position: absolute;
         top: 0;
         width: var(--handler-size);
-        background: #1991fa;
+        height: var(--handler-size);
         pointer-events: none;
-        text-align: center;
         border-radius: 0 1px 1px 0;
         box-shadow: 0 0 3px rgba(0, 0, 0, .3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-        &::before {
-            content: '⮕';
-            font-size: larger;
-            color: white;
-            line-height: var(--handler-size);
+        img {
+            width: 60%;
+            height: 60%;
         }
     }
 
@@ -78,5 +77,15 @@
         line-height: var(--handler-size);
         text-align: center;
         pointer-events: none;
+    }
+
+    .checking {
+        animation: spin 1s infinite linear;
+    }
+
+    @keyframes spin {
+        100% {
+            transform: rotate(360deg);
+        }
     }
 }
