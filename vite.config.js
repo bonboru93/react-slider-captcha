@@ -14,6 +14,7 @@ export default defineConfig(({ command }) => ({
       external: ['react']
     },
     minify: false,
+    copyPublicDir: false
   },
   plugins: [
     command === 'serve' && react(),

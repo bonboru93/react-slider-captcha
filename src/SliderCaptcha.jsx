@@ -1,80 +1,49 @@
-import React, { useState } from "react"
+import { useEffect, useState } from "react"
+
 import "./SliderCaptcha.less"
 
-import defaultBgImg from "./assets/bg.jpg"
-import defaultPuzzleImg from "./assets/puzzle.png"
-import arrowRightIcon from "./assets/arrow_right.svg"
-import okIcon from "./assets/ok.svg"
-import errIcon from "./assets/err.svg"
-import loadingIcon from "./assets/loading.svg"
-import reloadIcon from "./assets/reload.svg"
-
-
-const BG_WIDTH = 320
-const PUZZLE_WIDTH = 60
-const HANDLER_SIZE = 40
-const PUZZLE_WALK = BG_WIDTH - PUZZLE_WIDTH
-const HANDLER_WALK = BG_WIDTH - HANDLER_SIZE
-
-const iconMap = {
-    ready: arrowRightIcon,
-    checking: loadingIcon,
-    ok: okIcon,
-    err: errIcon
-}
-
-const colorMap = {
-    ready: ['#1991fa', '#d1e9fe'],
-    checking: ['#1991fa', '#d1e9fe'],
-    ok: ['#52ccba', '#d2f4ef'],
-    err: ['#f57a7a', '#fce1e1']
-}
-
-const SliderCaptcha = ({ bgImg = defaultBgImg, puzzleImg = defaultPuzzleImg, onCheck }) => {
-    const [puzzlePos, setPuzzlePos] = useState(0)
-    const handlerPos = puzzlePos * HANDLER_WALK / PUZZLE_WALK
-
+const SliderCaptcha = ({ onLoad, onCheck }) => {
+    const [bgSrc, setBgSrc] = useState()
+    const [puzzleSrc, setPuzzleSrc] = useState()
+    const [pos, setPos] = useState(0)
     const [status, setStatus] = useState('ready')
 
-    const _onCheck = v => {
+    useEffect(() => {
+        onLoad().then(r => {
+            setBgSrc(r.bgSrc)
+            setPuzzleSrc(r.puzzleSrc)
+        })
+    }, [onLoad])
+
+    const _onCheck = () => {
+        console.log(pos)
         setStatus('checking')
-        onCheck(v)
+        onCheck(pos)
             .then(() => setStatus('ok'))
             .catch(() => setStatus('err'))
             .finally(() => setTimeout(() => {
-                setPuzzlePos(0)
+                setPos(0)
                 setStatus('ready')
             }, 500))
     }
 
     return (
         <div className="slider_captcha">
-            <img src={bgImg} className="bg" />
-            <img src={puzzleImg} className="puzzle" style={{ left: puzzlePos }} />
-            <img src={reloadIcon} className="reload" />
+            <img src={bgSrc} className="bg" />
+            <img src={puzzleSrc} className="puzzle" style={{ left: pos }} />
 
-            <div className="slider">
-                <input type="range"
-                    value={puzzlePos} max={PUZZLE_WALK} step="0.1"
-                    onChange={e => setPuzzlePos(Number(e.target.value))}
-                    onMouseUp={e => _onCheck(Number(e.target.value))}
-                    onTouchEnd={e => _onCheck(Number(e.target.value))}
+            <div className="slider" data-hint={bgSrc ? "拖动滑块完成拼图" : "加载中"}>
+                <input type="range" max="260" step="0.1"
+                    style={{
+                        '--current-icon': `var(--${status}-icon)`,
+                        '--current-color': `var(--${status}-color)`,
+                        '--current-color-light': `var(--${status}-color-light)`
+                    }}
+                    disabled={!bgSrc || status !== 'ready'}
+                    value={pos} onChange={e => setPos(Number(e.target.value))}
+                    onMouseUp={_onCheck} onTouchEnd={_onCheck}
                     onKeyDown={e => e.preventDefault()}
-                    style={{ pointerEvents: status !== 'ready' && 'none' }}
                 />
-                <div className="rail" style={{ gridTemplateColumns: `${handlerPos}px auto` }}>
-                    <div style={{
-                        background: colorMap[status][1],
-                        borderColor: colorMap[status][0]
-                    }} />
-                </div>
-                <div className="hint">拖动滑块完成拼图</div>
-                <div className="handler" style={{
-                    left: handlerPos,
-                    background: colorMap[status][0]
-                }}>
-                    <img src={iconMap[status]} className={status} />
-                </div>
             </div>
         </div>
     )
