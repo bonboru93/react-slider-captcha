@@ -17,6 +17,8 @@ const SliderCaptcha = ({ onLoad, onCheck }) => {
 
     const _onCheck = () => {
         console.log(pos)
+        if (pos < 1) { return }
+
         setStatus('checking')
         onCheck(pos)
             .then(() => setStatus('ok'))
@@ -32,19 +34,17 @@ const SliderCaptcha = ({ onLoad, onCheck }) => {
             <img src={bgSrc} className="bg" />
             <img src={puzzleSrc} className="puzzle" style={{ left: pos }} />
 
-            <div className="slider" data-hint={bgSrc ? "拖动滑块完成拼图" : "加载中"}>
-                <input type="range" max="260" step="0.1"
-                    style={{
-                        '--current-icon': `var(--${status}-icon)`,
-                        '--current-color': `var(--${status}-color)`,
-                        '--current-color-light': `var(--${status}-color-light)`
-                    }}
-                    disabled={!bgSrc || status !== 'ready'}
-                    value={pos} onChange={e => setPos(Number(e.target.value))}
-                    onMouseUp={_onCheck} onTouchEnd={_onCheck}
-                    onKeyDown={e => e.preventDefault()}
-                />
-            </div>
+            <input type="range" max="260" step="0.1"
+                style={{
+                    '--current-icon': `var(--${status}-icon)`,
+                    '--current-color': `var(--${status}-color)`,
+                    '--current-color-light': `var(--${status}-color-light)`
+                }}
+                disabled={!bgSrc || status !== 'ready'}
+                value={pos} onChange={e => setPos(Number(e.target.value))}
+                onMouseUp={_onCheck} onTouchEnd={_onCheck}
+                onKeyDown={e => e.preventDefault()}
+            />
         </div>
     )
 }
